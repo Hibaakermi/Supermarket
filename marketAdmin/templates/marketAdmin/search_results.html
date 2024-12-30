@@ -1,0 +1,91 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block title %}MiniMarket Groceries{% endblock title %}
+
+{% block link %}
+{{block.super}}
+
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
+{% endblock link %}
+
+{% block content %}
+
+{% include 'core/header.html' with p=userdata %}
+
+<div class="container mt-3">
+
+    <div class="row"> 
+
+        <div class="col-sm-2">
+            <a href="/market/vegs" class="btn btn-outline-danger">Groceries</a>
+        </div>
+
+        <div class="col-sm-10">
+
+            <h2>Résultats pour "{{ query }}"</h2>
+
+            {% if results %}
+                <div class="row">
+                    {% for result in results %}
+                        <div class="col-sm-4">
+                            <div class="card">
+                                <!-- Affichage de l'image -->
+                                {% if result.vimg %}
+                                    <img src="{% static result.vimg %}" class="card-img-top" alt="Image du produit" width="200" height="200">
+                                {% elif result.gimg %}
+                                    <img src="{% static result.gimg %}" class="card-img-top" alt="Image du produit" width="200" height="200">
+                                {% endif %}
+                                <div class="card-body">
+                                    {% if result.vname %}
+                                        <h5 class="card-title">{{ result.vname|capfirst }}</h5>
+                                        <p class="card-text">{{ result.vinfo|capfirst }}</p>
+                                        <p class="card-text"><strong>{{ result.vprice }} Dt</strong></p>
+                                        <p class="card-text">{{ result.vamm }}</p>
+                                        <!-- Boutons uniformes -->
+                                        <a href="/user/buysingle/{{ result.id }}/vege/" class="btn btn-primary btn-block">Acheter maintenant</a>
+                                        <a href="/user/mycart/{{ result.id }}/{{ result.vprice }}/{{ result.vname }}" class="btn btn-dark btn-block"><i class="fas fa-shopping-cart"></i> Ajouter au panier</a>
+                                    {% elif result.gname %}
+                                        <h5 class="card-title">{{ result.gname|capfirst }}</h5>
+                                        <p class="card-text">{{ result.ginfo|capfirst }}</p>
+                                        <p class="card-text"><strong>{{ result.gprice }} Dt</strong></p>
+                                        <p class="card-text">{{ result.gamm }}</p>
+                                        <!-- Boutons uniformes -->
+                                        <a href="/user/buysingle/{{ result.id }}/groc/" class="btn btn-primary btn-block">Acheter maintenant</a>
+                                        <a href="/user/mycart/{{ result.id }}/{{ result.gprice }}/{{ result.gname }}" class="btn btn-dark btn-block"><i class="fas fa-shopping-cart"></i> Ajouter au panier</a>
+                                    {% elif result.name %}
+                                        <h5 class="card-title">{{ result.name|capfirst }}</h5>
+                                        <p class="card-text">{{ result.description|capfirst }}</p>
+                                        <p class="card-text"><strong>{{ result.price }} Dt</strong></p>
+                                        <!-- Boutons uniformes -->
+                                        <a href="/user/buysingle/{{ result.id }}/prod/" class="btn btn-primary btn-block">Acheter maintenant</a>
+                                        <a href="/user/mycart/{{ result.id }}/{{ result.price }}/{{ result.name }}" class="btn btn-dark btn-block"><i class="fas fa-shopping-cart"></i> Ajouter au panier</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination">
+                    {% if is_paginated %}
+                        {% if page_obj.has_previous %}
+                            <a href="?query={{ query }}&page={{ page_obj.previous_page_number }}">Précédent</a>
+                        {% endif %}
+                        Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}
+                        {% if page_obj.has_next %}
+                            <a href="?query={{ query }}&page={{ page_obj.next_page_number }}">Suivant</a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            {% else %}
+                <p>Aucun résultat trouvé pour "{{ query }}".</p>
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock content %}

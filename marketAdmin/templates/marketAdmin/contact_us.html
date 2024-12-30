@@ -1,0 +1,42 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Contactez-nous{% endblock title %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Contactez-nous</h2>
+    <p class="text-center mb-5">Nous serions ravis de recevoir vos commentaires, questions ou suggestions.</p>
+
+    {% if success %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>Succès!</strong> Votre message a été envoyé avec succès !
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endif %}
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <form method="POST" class="shadow p-4 rounded border">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="id_name" class="font-weight-bold">Nom</label>
+                    <input type="text" class="form-control" name="name" id="id_name" placeholder="Entrez votre nom" value="{{ form.name.value }}">
+                </div>
+                <div class="form-group">
+                    <label for="id_email" class="font-weight-bold">Email</label>
+                    <input type="email" class="form-control" name="email" id="id_email" placeholder="Entrez votre email" value="{{ form.email.value }}">
+                </div>
+                <div class="form-group">
+                    <label for="id_message" class="font-weight-bold">Message</label>
+                    <textarea class="form-control" name="message" id="id_message" rows="4" placeholder="Votre message ici">{{ form.message.value }}</textarea>
+                </div>
+                <div class="form-group text-center">
+                    <button type="submit" class="btn btn-lg btn-primary">Envoyer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}
